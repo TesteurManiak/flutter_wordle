@@ -1,0 +1,10 @@
+{
+    "dart.flutterSdkPath": "/Users/guillaumeroux/Documents/mobile/.fvm/flutter_sdk",
+    "dart.lineLength": 120,
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.rulers": [
+            120
+        ],
+    },
+}

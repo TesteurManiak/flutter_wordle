@@ -1,0 +1,8 @@
+include: package:flutter_lints/flutter.yaml
+
+linter:
+  rules:
+    implicit_call_tearoffs: false
+
+formater:
+  page_width: 120

@@ -18,4 +18,7 @@ abstract class WordOfTheDay with _$WordOfTheDay {
         date.month == now.month &&
         date.day == now.day);
   }
+
+  @override
+  String toString() => word;
 }

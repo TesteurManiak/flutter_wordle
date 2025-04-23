@@ -11,12 +11,9 @@ class LocalWordsDataSource implements WordsDataSource {
   final BackendDatabase _db;
 
   @override
-  Future<List<LetterFeedback>> checkWordOfTheDay({
-    required String guess,
-    required String locale,
-  }) {
-    final wordOfTheDay = _getWordOfTheDay(locale);
-    throw UnimplementedError();
+  Future<List<LetterFeedback>> checkWordOfTheDay(Word guess) async {
+    final wordOfTheDay = await _getWordOfTheDay(guess.locale);
+    return _checkLetters(guess.word, wordOfTheDay.word).toList();
   }
 
   Future<WordOfTheDay> _getWordOfTheDay(String locale) async {
@@ -35,6 +32,25 @@ class LocalWordsDataSource implements WordsDataSource {
     }
 
     return wordOfTheDay;
+  }
+
+  Iterable<LetterFeedback> _checkLetters(String guess, String secret) sync* {
+    final secretLetters = secret.split('');
+    final guessLetters = guess.split('');
+
+    for (var i = 0; i < guessLetters.length; i++) {
+      final guessLetter = guessLetters[i];
+      if (guessLetters[i] == secretLetters[i]) {
+        yield LetterFeedback(letter: guessLetter, color: LetterStatus.good);
+      } else if (secretLetters.contains(guessLetter)) {
+        yield LetterFeedback(
+          letter: guessLetter,
+          color: LetterStatus.wrongPlace,
+        );
+      } else {
+        yield LetterFeedback(letter: guessLetter, color: LetterStatus.absent);
+      }
+    }
   }
 
   @override

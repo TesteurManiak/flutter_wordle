@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:isolate';
 
 import 'package:backend/src/database/drift_database.dart';
 import 'package:backend/src/models/word.dart';
@@ -18,21 +17,16 @@ class BackendMigrationStrategy extends MigrationStrategy {
     // Pre-populate the database with words
     final enAsset = File('assets/words_en.json');
     final content = await enAsset.readAsString();
-    final decoded = await Isolate.run<List<WordsTableCompanion>>(
-      () => _parseWords(content),
-    );
-
-    await db.batch((b) {
-      b.insertAll(db.wordsTable, decoded);
-    });
-  }
-
-  static List<WordsTableCompanion> _parseWords(String assetContent) {
-    final decodedJson = jsonDecode(assetContent) as Iterable;
-    return decodedJson
+    final json = jsonDecode(content);
+    final decodedJson = (json as Iterable)
         .cast<Map<String, dynamic>>()
         .map((e) => Word.fromJson(e).insert())
         .toList();
+
+    await m.createAll();
+    await db.batch((b) {
+      b.insertAll(db.wordsTable, decodedJson);
+    });
   }
 }
 

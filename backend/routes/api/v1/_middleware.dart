@@ -7,8 +7,6 @@ final _db = BackendDatabase();
 
 Handler middleware(Handler handler) {
   return handler
-    ..use(provider<BackendDatabase>((_) => _db))
-    ..use(
-      provider<WordsDataSource>((ctxt) => LocalWordsDataSource(ctxt.read())),
-    );
+      .use(provider<WordsDataSource>((c) => LocalWordsDataSource(c.read())))
+      .use(provider<BackendDatabase>((_) => _db));
 }

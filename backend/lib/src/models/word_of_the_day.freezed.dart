@@ -39,11 +39,6 @@ mixin _$WordOfTheDay {
 
   @override
   int get hashCode => Object.hash(runtimeType, word, locale, date);
-
-  @override
-  String toString() {
-    return 'WordOfTheDay(word: $word, locale: $locale, date: $date)';
-  }
 }
 
 /// @nodoc
@@ -122,11 +117,6 @@ class _WordOfTheDay extends WordOfTheDay {
 
   @override
   int get hashCode => Object.hash(runtimeType, word, locale, date);
-
-  @override
-  String toString() {
-    return 'WordOfTheDay(word: $word, locale: $locale, date: $date)';
-  }
 }
 
 /// @nodoc

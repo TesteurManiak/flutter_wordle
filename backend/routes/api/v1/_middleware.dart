@@ -7,6 +7,7 @@ final _db = BackendDatabase();
 
 Handler middleware(Handler handler) {
   return handler
+      .use(requestLogger())
       .use(provider<WordsDataSource>((c) => LocalWordsDataSource(c.read())))
       .use(provider<BackendDatabase>((_) => _db));
 }

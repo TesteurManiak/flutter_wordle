@@ -1,0 +1,4 @@
+{
+    "DEV_MODE_ENABLED": true,
+    "apiDomain": "http://localhost:8080"
+}

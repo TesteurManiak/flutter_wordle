@@ -17,7 +17,8 @@ enum HttpStatusCode {
   methodNotAllowed(405),
   notAcceptable(406),
   proxyAuthenticationRequired(407),
-  requestTimeout(408);
+  requestTimeout(408),
+  internalServerError(500);
 
   const HttpStatusCode(this.code);
 

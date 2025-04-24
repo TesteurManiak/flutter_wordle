@@ -1,4 +1,5 @@
 import 'package:backend/src/data_sources/words_data_source.dart';
+import 'package:backend/src/responses/internal_server_error.dart';
 import 'package:backend/src/responses/method_not_allowed.dart';
 import 'package:dart_frog/dart_frog.dart';
 
@@ -19,7 +20,7 @@ Future<Response> _get(RequestContext context) async {
         context.request.uri.queryParameters['locale'] ?? _kDefaultLocale;
     final word = await dataSource.getRandomWord(locale);
     return Response.json(body: word.toJson());
-  } catch (e, s) {
-    return Response(statusCode: 500, body: '$e\n$s');
+  } catch (e) {
+    return InternalServerError('$e');
   }
 }

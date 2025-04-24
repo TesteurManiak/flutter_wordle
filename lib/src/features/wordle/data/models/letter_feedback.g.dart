@@ -9,19 +9,13 @@ part of 'letter_feedback.dart';
 _LetterFeedback _$LetterFeedbackFromJson(Map<String, dynamic> json) =>
     _LetterFeedback(
       letter: json['letter'] as String,
-      color: $enumDecode(_$LetterStatusEnumMap, json['color']),
-      isValid: json['isValid'] as bool? ?? false,
+      color: const ColorConverter().fromJson((json['color'] as num).toInt()),
+      isValid: json['isValid'] as bool,
     );
 
 Map<String, dynamic> _$LetterFeedbackToJson(_LetterFeedback instance) =>
     <String, dynamic>{
       'letter': instance.letter,
-      'color': _$LetterStatusEnumMap[instance.color]!,
+      'color': const ColorConverter().toJson(instance.color),
       'isValid': instance.isValid,
     };
-
-const _$LetterStatusEnumMap = {
-  LetterStatus.good: 4283215696,
-  LetterStatus.wrongPlace: 4294961979,
-  LetterStatus.absent: 4294198070,
-};

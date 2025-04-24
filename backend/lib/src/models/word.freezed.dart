@@ -85,8 +85,8 @@ class _$WordCopyWithImpl<$Res> implements $WordCopyWith<$Res> {
 
 /// @nodoc
 @JsonSerializable()
-class _Word implements Word {
-  const _Word({required this.word, required this.locale});
+class _Word extends Word {
+  const _Word({required this.word, required this.locale}) : super._();
   factory _Word.fromJson(Map<String, dynamic> json) => _$WordFromJson(json);
 
   @override

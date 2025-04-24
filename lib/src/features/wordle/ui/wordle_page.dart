@@ -1,51 +1,23 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
 import 'package:flutter_wordle/src/features/wordle/data/datasources/wordle_remote_datasource.dart';
+import 'package:flutter_wordle/src/features/wordle/data/models/letter_feedback.dart';
 import 'package:flutter_wordle/src/features/wordle/ui/widgets/word_input_field.dart';
 
-class WordlePage extends StatefulWidget {
+class WordlePage extends StatelessWidget {
   const WordlePage({super.key});
 
   @override
-  State<WordlePage> createState() => _WordlePageState();
-}
-
-class _WordlePageState extends State<WordlePage> {
-  late final Future<String> secretWordFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    secretWordFuture = wordleRemoteDatasource.instance.getWord();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<String>(
-        future: secretWordFuture,
-        builder: (context, snapshot) {
-          if (snapshot.data case final secretWord? when snapshot.hasData) return _Loaded(secretWord);
-          if (snapshot.error case final error? when snapshot.hasError) {
-            return Center(
-              child: Padding(padding: EdgeInsets.all(16), child: Text(error.toString(), textAlign: TextAlign.center)),
-            );
-          }
-          return const Center(child: CupertinoActivityIndicator());
-        },
-      ),
-    );
+    return Scaffold(body: _Loaded());
   }
 }
 
 class _Loaded extends StatefulWidget {
-  const _Loaded(this.secretWord);
-
-  final String secretWord;
+  const _Loaded();
 
   @override
   State<_Loaded> createState() => _LoadedState();
@@ -54,7 +26,7 @@ class _Loaded extends StatefulWidget {
 class _LoadedState extends State<_Loaded> {
   static const maxAttempts = 6;
 
-  Map<int, List<_GuessedLetter>> attemptLines = {};
+  Map<int, List<LetterFeedback>> attemptLines = {};
   int attempts = 0;
 
   @override
@@ -67,7 +39,7 @@ class _LoadedState extends State<_Loaded> {
           mainAxisSize: MainAxisSize.min,
           children: [
             WordInputField(
-              wordLength: widget.secretWord.length,
+              wordLength: 5,
               enabled: attempts < maxAttempts,
               onSubmit: attempts < maxAttempts ? onWordSubmit : null,
             ),
@@ -78,29 +50,14 @@ class _LoadedState extends State<_Loaded> {
     );
   }
 
-  void onWordSubmit(String guess) {
-    final newColors = checkWord(guess, widget.secretWord.toUpperCase());
-    setState(() => attemptLines[attempts] = newColors.toList());
+  Future<void> onWordSubmit(String guess) async {
+    final newColors = await wordleRemoteDatasource.instance.guessWord(guess);
+    setState(() => attemptLines[attempts] = newColors);
 
-    if (newColors.every((l) => l.valid)) {
+    if (newColors.every((l) => l.isValid)) {
       launchConfetti();
     }
     setState(() => attempts++);
-  }
-
-  Iterable<_GuessedLetter> checkWord(String guess, String secret) sync* {
-    final secretLetters = secret.split('');
-    final guessLetters = guess.split('');
-    for (var i = 0; i < guessLetters.length; i++) {
-      final guessLetter = guessLetters[i];
-      if (guessLetters[i] == secretLetters[i]) {
-        yield _GuessedLetter(letter: guessLetter, color: Colors.green);
-      } else if (secretLetters.contains(guessLetters[i])) {
-        yield _GuessedLetter(letter: guessLetter, color: Colors.yellow);
-      } else {
-        yield _GuessedLetter(letter: guessLetter, color: Colors.red);
-      }
-    }
   }
 
   void launchConfetti() {
@@ -150,7 +107,7 @@ class _LoadedState extends State<_Loaded> {
 class _ColorRow extends StatelessWidget {
   const _ColorRow({required this.letters});
 
-  final List<_GuessedLetter> letters;
+  final List<LetterFeedback> letters;
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +122,7 @@ class _ColorRow extends StatelessWidget {
 class _ColorCell extends StatelessWidget {
   const _ColorCell(this.letter);
 
-  final _GuessedLetter letter;
+  final LetterFeedback letter;
 
   @override
   Widget build(BuildContext context) {
@@ -177,13 +134,4 @@ class _ColorCell extends StatelessWidget {
       child: Text(letter.letter, textAlign: TextAlign.center),
     );
   }
-}
-
-class _GuessedLetter {
-  const _GuessedLetter({required this.letter, required this.color});
-
-  final String letter;
-  final Color color;
-
-  bool get valid => color == Colors.green;
 }

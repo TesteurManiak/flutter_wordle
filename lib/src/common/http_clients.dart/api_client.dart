@@ -5,7 +5,26 @@ class ApiClient {
 
   final RestClient restClient;
 
-  Future<RequestResult> get(String path, {Map<String, Object?>? queryParameters}) {
-    return restClient.send(method: HttpMethod.get, path: path, queryParameters: queryParameters);
+  Future<Result<Object, Object>> get(
+    String path, {
+    Map<String, Object?>? queryParameters,
+    Map<String, String>? headers,
+  }) {
+    return restClient.send(method: HttpMethod.get, path: path, queryParameters: queryParameters, headers: headers);
+  }
+
+  Future<Result<Object, Object>> post(
+    String path, {
+    Map<String, Object?>? queryParameters,
+    Map<String, String>? headers,
+    Object? body,
+  }) {
+    return restClient.send(
+      method: HttpMethod.post,
+      path: path,
+      queryParameters: queryParameters,
+      headers: headers,
+      body: body,
+    );
   }
 }

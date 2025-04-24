@@ -8,6 +8,7 @@ abstract class LetterFeedback with _$LetterFeedback {
   const factory LetterFeedback({
     required String letter,
     required LetterStatus color,
+    @Default(false) bool isValid,
   }) = _LetterFeedback;
 
   factory LetterFeedback.fromJson(Map<String, dynamic> json) =>

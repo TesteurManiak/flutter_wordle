@@ -36,13 +36,17 @@ class LocalWordsDataSource implements WordsDataSource {
   }
 
   Iterable<LetterFeedback> _checkLetters(String guess, String secret) sync* {
-    final secretLetters = secret.split('');
-    final guessLetters = guess.split('');
+    final secretLetters = secret.toUpperCase().split('');
+    final guessLetters = guess.toUpperCase().split('');
 
     for (var i = 0; i < guessLetters.length; i++) {
       final guessLetter = guessLetters[i];
       if (guessLetters[i] == secretLetters[i]) {
-        yield LetterFeedback(letter: guessLetter, color: LetterStatus.good);
+        yield LetterFeedback(
+          letter: guessLetter,
+          color: LetterStatus.good,
+          isValid: true,
+        );
       } else if (secretLetters.contains(guessLetter)) {
         yield LetterFeedback(
           letter: guessLetter,

@@ -17,6 +17,7 @@ T _$identity<T>(T value) => value;
 mixin _$LetterFeedback {
   String get letter;
   LetterStatus get color;
+  bool get isValid;
 
   /// Create a copy of LetterFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -35,16 +36,17 @@ mixin _$LetterFeedback {
         (other.runtimeType == runtimeType &&
             other is LetterFeedback &&
             (identical(other.letter, letter) || other.letter == letter) &&
-            (identical(other.color, color) || other.color == color));
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.isValid, isValid) || other.isValid == isValid));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, letter, color);
+  int get hashCode => Object.hash(runtimeType, letter, color, isValid);
 
   @override
   String toString() {
-    return 'LetterFeedback(letter: $letter, color: $color)';
+    return 'LetterFeedback(letter: $letter, color: $color, isValid: $isValid)';
   }
 }
 
@@ -54,7 +56,7 @@ abstract mixin class $LetterFeedbackCopyWith<$Res> {
           LetterFeedback value, $Res Function(LetterFeedback) _then) =
       _$LetterFeedbackCopyWithImpl;
   @useResult
-  $Res call({String letter, LetterStatus color});
+  $Res call({String letter, LetterStatus color, bool isValid});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$LetterFeedbackCopyWithImpl<$Res>
   $Res call({
     Object? letter = null,
     Object? color = null,
+    Object? isValid = null,
   }) {
     return _then(_self.copyWith(
       letter: null == letter
@@ -82,6 +85,10 @@ class _$LetterFeedbackCopyWithImpl<$Res>
           ? _self.color
           : color // ignore: cast_nullable_to_non_nullable
               as LetterStatus,
+      isValid: null == isValid
+          ? _self.isValid
+          : isValid // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -89,7 +96,8 @@ class _$LetterFeedbackCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _LetterFeedback implements LetterFeedback {
-  const _LetterFeedback({required this.letter, required this.color});
+  const _LetterFeedback(
+      {required this.letter, required this.color, this.isValid = false});
   factory _LetterFeedback.fromJson(Map<String, dynamic> json) =>
       _$LetterFeedbackFromJson(json);
 
@@ -97,6 +105,9 @@ class _LetterFeedback implements LetterFeedback {
   final String letter;
   @override
   final LetterStatus color;
+  @override
+  @JsonKey()
+  final bool isValid;
 
   /// Create a copy of LetterFeedback
   /// with the given fields replaced by the non-null parameter values.
@@ -119,16 +130,17 @@ class _LetterFeedback implements LetterFeedback {
         (other.runtimeType == runtimeType &&
             other is _LetterFeedback &&
             (identical(other.letter, letter) || other.letter == letter) &&
-            (identical(other.color, color) || other.color == color));
+            (identical(other.color, color) || other.color == color) &&
+            (identical(other.isValid, isValid) || other.isValid == isValid));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, letter, color);
+  int get hashCode => Object.hash(runtimeType, letter, color, isValid);
 
   @override
   String toString() {
-    return 'LetterFeedback(letter: $letter, color: $color)';
+    return 'LetterFeedback(letter: $letter, color: $color, isValid: $isValid)';
   }
 }
 
@@ -140,7 +152,7 @@ abstract mixin class _$LetterFeedbackCopyWith<$Res>
       __$LetterFeedbackCopyWithImpl;
   @override
   @useResult
-  $Res call({String letter, LetterStatus color});
+  $Res call({String letter, LetterStatus color, bool isValid});
 }
 
 /// @nodoc
@@ -158,6 +170,7 @@ class __$LetterFeedbackCopyWithImpl<$Res>
   $Res call({
     Object? letter = null,
     Object? color = null,
+    Object? isValid = null,
   }) {
     return _then(_LetterFeedback(
       letter: null == letter
@@ -168,6 +181,10 @@ class __$LetterFeedbackCopyWithImpl<$Res>
           ? _self.color
           : color // ignore: cast_nullable_to_non_nullable
               as LetterStatus,
+      isValid: null == isValid
+          ? _self.isValid
+          : isValid // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }

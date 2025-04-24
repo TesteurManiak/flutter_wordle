@@ -18,3 +18,11 @@ Run the project locally using the [Dart Frog CLI](https://pub.dev/packages/dart_
 ```sh
 dart_frog dev
 ```
+
+## Endpoints
+
+|   | Method | Description |
+|---|--------|-------------|
+| `/api/v1/guess` | `POST` | Submit a guess |
+| `/api/v1/random` | `GET` | Get a random word |
+

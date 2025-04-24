@@ -1,10 +1,11 @@
-import 'package:backend/src/http_status_code.dart';
+import 'dart:io';
+
 import 'package:backend/src/responses/error_response.dart';
 
 class InternalServerError extends ErrorResponse {
   InternalServerError(String error)
       : super(
-          statusCode: HttpStatusCode.internalServerError.code,
+          statusCode: HttpStatus.internalServerError,
           message: 'Internal server error: $error',
         );
 }

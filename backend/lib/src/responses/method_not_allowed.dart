@@ -1,12 +1,11 @@
-import 'package:backend/src/status_code.dart';
+import 'package:backend/src/http_status_code.dart';
+import 'package:backend/src/responses/error_response.dart';
 import 'package:dart_frog/dart_frog.dart';
 
-class MethodNotAllowedResponse extends Response {
-  MethodNotAllowedResponse(this.method)
+class MethodNotAllowedResponse extends ErrorResponse {
+  MethodNotAllowedResponse(HttpMethod method)
       : super(
-          statusCode: StatusCode.methodNotAllowed.code,
-          body: 'Method ${method.value} not allowed',
+          statusCode: HttpStatusCode.methodNotAllowed.code,
+          message: 'Method ${method.value} not allowed',
         );
-
-  final HttpMethod method;
 }

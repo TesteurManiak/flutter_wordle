@@ -20,7 +20,7 @@ docker run -p 5432:5432 \
 ```
 
 ```bash
-dart_frog dev
+DEV_MODE=true dart_frog dev
 ```
 
 This will start the server on `localhost:8080`.

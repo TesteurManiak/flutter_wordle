@@ -26,8 +26,10 @@ docker run -p 5432:5432 \
 Then, you can run the following command to start the Dart Frog server:
 
 ```bash
-dart_frog dev
+DEV_MODE=true dart_frog dev
 ```
+
+`DEV_MODE=true` will enable access to the database in development mode.
 
 ## Endpoints
 

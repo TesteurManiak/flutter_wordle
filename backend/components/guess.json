@@ -1,0 +1,13 @@
+{
+    "type": "object",
+    "properties": {
+        "word": {
+            "type": "string",
+            "description": "The word to be displayed."
+        },
+        "locale": {
+            "type": "string",
+            "description": "The locale for the word."
+        }
+    }
+}

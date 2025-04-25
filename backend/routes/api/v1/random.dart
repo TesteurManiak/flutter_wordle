@@ -5,6 +5,8 @@ import 'package:dart_frog/dart_frog.dart';
 
 const _kDefaultLocale = 'en';
 
+/// @Allow(GET)
+/// @Query(locale)
 Future<Response> onRequest(RequestContext context) {
   final method = context.request.method;
   return switch (method) {

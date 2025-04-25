@@ -23,7 +23,6 @@ class LocalWordsDataSource implements WordsDataSource {
 
     if (wordOfTheDay == null || wordOfTheDay.isExpired) {
       final newWordOfTheDay = await getRandomWord(locale);
-      print('New word of the day: $newWordOfTheDay');
       await _db.batch((b) {
         b
           ..deleteWhere(_db.wordOfTheDayTable, (t) => t.locale.equals(locale))

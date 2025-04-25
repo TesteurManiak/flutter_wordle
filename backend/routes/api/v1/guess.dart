@@ -5,6 +5,7 @@ import 'package:backend/src/responses/internal_server_error.dart';
 import 'package:backend/src/responses/method_not_allowed.dart';
 import 'package:dart_frog/dart_frog.dart';
 
+/// @Allow(POST)
 Future<Response> onRequest(RequestContext context) {
   final method = context.request.method;
   return switch (method) {

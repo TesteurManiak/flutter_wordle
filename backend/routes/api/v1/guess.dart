@@ -1,4 +1,5 @@
 import 'package:backend/src/data_sources/words_data_source.dart';
+import 'package:backend/src/logger/logger.dart';
 import 'package:backend/src/models/word.dart';
 import 'package:backend/src/responses/bad_request.dart';
 import 'package:backend/src/responses/internal_server_error.dart';
@@ -29,6 +30,7 @@ Future<Response> _post(RequestContext context) async {
     final result = await dataSource.checkWordOfTheDay(guess);
     return Response.json(body: result.map((e) => e.toJson()).toList());
   } catch (e) {
+    context.logger.error('$e');
     return InternalServerError('$e');
   }
 }

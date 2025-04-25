@@ -1,4 +1,5 @@
 import 'package:backend/src/database/migration.dart';
+import 'package:backend/src/env_variables.dart';
 import 'package:drift/drift.dart';
 import 'package:drift_postgres/drift_postgres.dart';
 import 'package:postgres/postgres.dart' as pg;
@@ -33,13 +34,15 @@ class BackendDatabase extends _$BackendDatabase {
   static QueryExecutor _openConnection() {
     return PgDatabase(
       endpoint: pg.Endpoint(
-        host: 'localhost',
+        host: EnvVariables.pgHost,
         database: 'myapp',
-        username: 'postgres',
-        password: 'postgres',
+        username: EnvVariables.pgUser,
+        password: EnvVariables.pgPassword,
       ),
-      settings: const pg.ConnectionSettings(
-        sslMode: pg.SslMode.disable,
+      settings: pg.ConnectionSettings(
+        sslMode: EnvVariables.devModeEnabled
+            ? pg.SslMode.disable
+            : pg.SslMode.require,
       ),
     );
   }

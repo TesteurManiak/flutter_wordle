@@ -1,8 +1,7 @@
-import 'dart:io';
-
 import 'package:backend/src/database/migration.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
+import 'package:drift_postgres/drift_postgres.dart';
+import 'package:postgres/postgres.dart' as pg;
 
 part 'drift_database.g.dart';
 
@@ -31,10 +30,18 @@ class BackendDatabase extends _$BackendDatabase {
   @override
   int get schemaVersion => 1;
 
-  static LazyDatabase _openConnection() {
-    return LazyDatabase(() async {
-      final file = File('db.sqlite');
-      return NativeDatabase(file);
-    });
+  static QueryExecutor _openConnection() {
+    return PgDatabase(
+      logStatements: true,
+      endpoint: pg.Endpoint(
+        host: 'localhost',
+        database: 'myapp',
+        username: 'postgres',
+        password: 'postgres',
+      ),
+      settings: const pg.ConnectionSettings(
+        sslMode: pg.SslMode.disable,
+      ),
+    );
   }
 }

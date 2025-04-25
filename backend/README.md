@@ -13,7 +13,17 @@ Backend for the `flutter_wordle` project.
 
 ## Getting Started
 
-Run the project locally using the [Dart Frog CLI](https://pub.dev/packages/dart_frog_cli):
+To run the project locally you will need to run a docker instance for the database:
+
+```sh
+docker run -p 5432:5432 \
+    -e POSTGRES_USER=postgres \
+    -e POSTGRES_PASSWORD=postgres \
+    -e POSTGRES_DB=myapp \
+    -d postgres
+```
+
+Then, you can run the following command to start the Dart Frog server:
 
 ```sh
 dart_frog dev
@@ -25,4 +35,6 @@ dart_frog dev
 |---|--------|-------------|
 | `/api/v1/guess` | `POST` | Submit a guess |
 | `/api/v1/random` | `GET` | Get a random word |
+
+Note that a generated swagger file is available at `/index.html`.
 

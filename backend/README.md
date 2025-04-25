@@ -15,7 +15,7 @@ Backend for the `flutter_wordle` project.
 
 To run the project locally you will need to run a docker instance for the database:
 
-```sh
+```bash
 docker run -p 5432:5432 \
     -e POSTGRES_USER=postgres \
     -e POSTGRES_PASSWORD=postgres \
@@ -25,7 +25,7 @@ docker run -p 5432:5432 \
 
 Then, you can run the following command to start the Dart Frog server:
 
-```sh
+```bash
 dart_frog dev
 ```
 

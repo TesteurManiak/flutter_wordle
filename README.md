@@ -9,10 +9,17 @@ Wordle game made in Flutter.
 
 ## Run locally
 
-You first need to run the backend server in the `backend` directory. You can do this by installing the [dart_frog_cli](https://pub.dev/packages/dart_frog_cli) and running the following command:
+You first need to run the backend server in the `backend` directory. You'll have to run a docker instance for the PostgreSQL database and then start the backend using the [dart_frog_cli](https://pub.dev/packages/dart_frog_cli):
 
 ```bash
-cd ./backend/
+docker run -p 5432:5432 \
+    -e POSTGRES_USER=postgres \
+    -e POSTGRES_PASSWORD=postgres \
+    -e POSTGRES_DB=myapp \
+    -d postgres
+```
+
+```bash
 dart_frog dev
 ```
 

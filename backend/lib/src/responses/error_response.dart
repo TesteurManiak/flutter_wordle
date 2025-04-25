@@ -4,5 +4,10 @@ class ErrorResponse extends Response {
   ErrorResponse({
     required super.statusCode,
     required String message,
-  }) : super(body: message);
+  }) : super.json(
+          body: {
+            'code': statusCode,
+            'message': message,
+          },
+        );
 }

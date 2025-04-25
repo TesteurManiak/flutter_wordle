@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_wordle/src/common/models/error.dart';
 import 'package:http/http.dart';
 
 enum HttpMethod {
@@ -22,7 +23,7 @@ class RestClient {
   final Uri baseUri;
   final Client httpClient;
 
-  Future<Result<Object, Object>> send({
+  Future<Result<Object, AppError>> send({
     required HttpMethod method,
     required String path,
     Map<String, Object?>? queryParameters,
@@ -41,12 +42,14 @@ class RestClient {
     return _sendRequest(request);
   }
 
-  Future<Result<Object, Object>> _sendRequest(BaseRequest request) async {
+  Future<Result<Object, AppError>> _sendRequest(BaseRequest request) async {
     try {
       final response = await httpClient.send(request);
 
       if (!response.isSuccessful) {
-        return Result.failure(Exception('Request failed with status: ${response.statusCode}'));
+        return Result.failure(
+          AppError(code: response.statusCode, message: 'Request failed with status: ${response.statusCode}'),
+        );
       }
 
       final body = await response.stream.bytesToString();
@@ -58,7 +61,7 @@ class RestClient {
         if (mimeType == ContentType.json.mimeType) {
           final decodedJson = await compute(jsonDecode, body);
           if (decodedJson is! Object) {
-            return const Result.failure(FormatException('Invalid JSON'));
+            return Result.failure(AppError(message: 'Invalid JSON: $decodedJson'));
           }
           return Result.success(decodedJson);
         }
@@ -66,7 +69,7 @@ class RestClient {
 
       return Result.success(body);
     } catch (e) {
-      return Result.failure(e);
+      return Result.failure(AppError(message: 'Request failed: $e'));
     }
   }
 }

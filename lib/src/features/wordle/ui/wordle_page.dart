@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_confetti/flutter_confetti.dart';
+import 'package:flutter_wordle/src/common/models/error.dart';
 import 'package:flutter_wordle/src/features/wordle/data/datasources/wordle_remote_datasource.dart';
 import 'package:flutter_wordle/src/features/wordle/data/models/letter_feedback.dart';
 import 'package:flutter_wordle/src/features/wordle/ui/widgets/word_input_field.dart';
@@ -54,12 +55,16 @@ class _WordlePageState extends State<WordlePage> {
 
   Future<void> onWordSubmit(String guess) async {
     setState(() => isLoading = true);
-    final newColors = await wordleRemoteDatasource.instance.guessWord(guess);
-    setState(() {
-      attemptLetters.addAll(newColors);
-      isLoading = false;
-    });
-    if (newColors.every((l) => l.isValid)) launchConfetti();
+    try {
+      final newColors = await wordleRemoteDatasource.instance.guessWord(guess);
+      setState(() => attemptLetters.addAll(newColors));
+      if (newColors.every((l) => l.isValid)) launchConfetti();
+    } on AppError catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.message)));
+    } finally {
+      setState(() => isLoading = false);
+    }
   }
 
   void launchConfetti() {

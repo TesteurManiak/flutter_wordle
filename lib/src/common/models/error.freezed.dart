@@ -43,10 +43,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,code,message);
 
-@override
-String toString() {
-  return 'AppError(code: $code, message: $message)';
-}
 
 
 }
@@ -114,10 +110,6 @@ bool operator ==(Object other) {
 @override
 int get hashCode => Object.hash(runtimeType,code,message);
 
-@override
-String toString() {
-  return 'AppError(code: $code, message: $message)';
-}
 
 
 }

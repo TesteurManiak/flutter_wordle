@@ -7,63 +7,64 @@ import 'package:flutter_wordle/src/features/wordle/data/datasources/wordle_remot
 import 'package:flutter_wordle/src/features/wordle/data/models/letter_feedback.dart';
 import 'package:flutter_wordle/src/features/wordle/ui/widgets/word_input_field.dart';
 
-class WordlePage extends StatelessWidget {
+class WordlePage extends StatefulWidget {
   const WordlePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(body: _Loaded());
-  }
+  State<WordlePage> createState() => _WordlePageState();
 }
 
-class _Loaded extends StatefulWidget {
-  const _Loaded();
+class _WordlePageState extends State<WordlePage> {
+  final attemptLetters = <LetterFeedback?>[];
 
-  @override
-  State<_Loaded> createState() => _LoadedState();
-}
-
-class _LoadedState extends State<_Loaded> {
-  static const maxAttempts = 6;
-
-  Map<int, List<LetterFeedback>> attemptLines = {};
-  int attempts = 0;
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          spacing: 16,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            WordInputField(
+    return Scaffold(
+      appBar: AppBar(),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: WordInputField(
               wordLength: 5,
-              enabled: attempts < maxAttempts,
-              onSubmit: attempts < maxAttempts ? onWordSubmit : null,
+              enabled: attemptLetters.length < 30,
+              onSubmit: attemptLetters.length < 30 && !isLoading ? onWordSubmit : null,
             ),
-            for (final letters in attemptLines.values) _ColorRow(letters: letters),
-          ],
-        ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 36),
+            sliver: SliverGrid.builder(
+              itemCount: 30,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 5,
+                crossAxisSpacing: kWordCellSpacing,
+                mainAxisSpacing: kWordCellSpacing,
+              ),
+              itemBuilder: (context, index) {
+                final letter = attemptLetters.elementAtOrNull(index);
+                return _ColorCell(letter);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
   Future<void> onWordSubmit(String guess) async {
+    setState(() => isLoading = true);
     final newColors = await wordleRemoteDatasource.instance.guessWord(guess);
-    setState(() => attemptLines[attempts] = newColors);
-
-    if (newColors.every((l) => l.isValid)) {
-      launchConfetti();
-    }
-    setState(() => attempts++);
+    setState(() {
+      attemptLetters.addAll(newColors);
+      isLoading = false;
+    });
+    if (newColors.every((l) => l.isValid)) launchConfetti();
   }
 
   void launchConfetti() {
-    double randomInRange(double min, double max) {
-      return min + Random().nextDouble() * (max - min);
-    }
+    final rnd = Random();
+    double randomInRange(double min, double max) => min + rnd.nextDouble() * (max - min);
 
     int total = 60;
     int progress = 0;
@@ -86,7 +87,7 @@ class _LoadedState extends State<_Loaded> {
           spread: 360,
           ticks: 60,
           x: randomInRange(0.1, 0.3),
-          y: Random().nextDouble() - 0.2,
+          y: rnd.nextDouble() - 0.2,
         ),
       );
       Confetti.launch(
@@ -97,41 +98,35 @@ class _LoadedState extends State<_Loaded> {
           spread: 360,
           ticks: 60,
           x: randomInRange(0.7, 0.9),
-          y: Random().nextDouble() - 0.2,
+          y: rnd.nextDouble() - 0.2,
         ),
       );
     });
   }
 }
 
-class _ColorRow extends StatelessWidget {
-  const _ColorRow({required this.letters});
-
-  final List<LetterFeedback> letters;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      spacing: kWordCellSpacing,
-      children: [for (final letter in letters) _ColorCell(letter)],
-    );
-  }
-}
-
 class _ColorCell extends StatelessWidget {
   const _ColorCell(this.letter);
 
-  final LetterFeedback letter;
+  final LetterFeedback? letter;
 
   @override
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      width: kWordCellSize,
-      height: kWordCellSize,
-      decoration: BoxDecoration(color: letter.color, borderRadius: BorderRadius.circular(4)),
-      child: Text(letter.letter, textAlign: TextAlign.center),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: switch (letter) {
+          LetterFeedback(:final color) => color,
+          _ => null,
+        },
+        borderRadius: BorderRadius.circular(4),
+        border: letter == null ? Border.all(color: Colors.grey.shade300) : null,
+      ),
+      child: switch (letter) {
+        final letter? => Text(letter.letter, textAlign: TextAlign.center),
+        _ => null,
+      },
     );
   }
 }

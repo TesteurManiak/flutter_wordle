@@ -32,7 +32,6 @@ class BackendDatabase extends _$BackendDatabase {
 
   static QueryExecutor _openConnection() {
     return PgDatabase(
-      logStatements: true,
       endpoint: pg.Endpoint(
         host: 'localhost',
         database: 'myapp',

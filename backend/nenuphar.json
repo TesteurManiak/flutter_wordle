@@ -1,8 +1,8 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "A sample API",
-    "description": "A sample API",
+    "title": "backend",
+    "description": "Backend for the flutter_wordle project.",
     "termsOfService": "http://localhost",
     "contact": {
       "name": "none",
@@ -10,7 +10,7 @@
       "email": "none@api.com"
     },
     "license": {
-      "name": "",
+      "name": "MIT",
       "url": ""
     },
     "version": "0.0.0"
